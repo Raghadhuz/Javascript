@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>All Tasks – Local & Session Storage</title>
+
+    <style>
+      body {
+        font-family: Arial;
+        margin: 20px;
+      }
+
+      h2 {
+        background: #eee;
+        padding: 10px;
+      }
+
+      form {
+        margin-bottom: 20px;
+        padding: 15px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+      }
+
+      input,
+      textarea,
+      select {
+        width: 250px;
+        padding: 6px;
+        margin: 5px 0;
+      }
+
+      .card {
+        background: #f5f5f5;
+        padding: 12px;
+        margin: 10px 0;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+      }
+
+      button {
+        padding: 8px 15px;
+        margin-top: 8px;
+        cursor: pointer;
+        background: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- ******************************************************** -->
+    <!--                     TASK ONE – LOCAL STORAGE             -->
+    <!-- ******************************************************** -->
+
+    <h2>Task 1: Personal Information (Local Storage)</h2>
+
+    <form id="personalForm">
+      <label>Your Name:</label><br />
+      <input type="text" id="p_name" required /><br />
+
+      <label>Your Age:</label><br />
+      <input type="number" id="p_age" required /><br />
+
+      <label>Gender:</label><br />
+      <select id="p_gender">
+        <option>Male</option>
+        <option>Female</option></select
+      ><br />
+
+      <label>Brief Description:</label><br />
+      <textarea id="p_desc"></textarea><br />
+
+      <label>Your Major and University:</label><br />
+      <input type="text" id="p_major" /><br />
+
+      <label>Programming Languages (choose at least 3):</label><br />
+      <input type="checkbox" name="langs" value="JavaScript" /> JavaScript<br />
+      <input type="checkbox" name="langs" value="Python" /> Python<br />
+      <input type="checkbox" name="langs" value="C++" /> C++<br />
+      <input type="checkbox" name="langs" value="Java" /> Java<br />
+      <input type="checkbox" name="langs" value="PHP" /> PHP<br />
+
+      <button type="button" onclick="savePersonal()">Submit</button>
+    </form>
+
+    <h3>Your Personal Information Cards:</h3>
+    <div id="personalCards"></div>
+
+    <!-- ******************************************************** -->
+    <!--                     TASK TWO – SESSION STORAGE           -->
+    <!-- ******************************************************** -->
+
+    <h2>Task 2: Project Information (Session Storage)</h2>
+
+    <form id="projectForm">
+      <label>Subject:</label><br />
+      <input type="text" id="pr_subject" required /><br />
+
+      <label>Description:</label><br />
+      <textarea id="pr_desc"></textarea><br />
+
+      <label>User Types:</label><br />
+      <input type="text" id="pr_users" /><br />
+
+      <label>Technology Used:</label><br />
+      <input type="text" id="pr_tech" /><br />
+
+      <button type="button" onclick="saveProject()">Submit</button>
+    </form>
+
+    <h3>Your Project Information Cards:</h3>
+    <div id="projectCards"></div>
+
+    <!-- ******************************************************** -->
+    <!--                     TASK THREE – REGISTER + LOGIN        -->
+    <!-- ******************************************************** -->
+
+    <h2>Task 3: Registration & Login (Local Storage)</h2>
+
+    <h3>Register</h3>
+    <form id="registerForm">
+      <input type="text" id="r_fname" placeholder="First Name" required /><br />
+      <input type="text" id="r_lname" placeholder="Last Name" required /><br />
+      <input type="email" id="r_email" placeholder="Email" required /><br />
+      <input
+        type="password"
+        id="r_pass"
+        placeholder="Password"
+        required
+      /><br />
+      <button type="button" onclick="registerUser()">Register</button>
+    </form>
+
+    <h3>Login</h3>
+    <form id="loginForm">
+      <input type="email" id="l_email" placeholder="Email" required /><br />
+      <input
+        type="password"
+        id="l_pass"
+        placeholder="Password"
+        required
+      /><br />
+      <button type="button" onclick="loginUser()">Login</button>
+    </form>
+
+    <p id="loginStatus"></p>
+
+    <script>
+      /* ========================================================= */
+      /*                     TASK 1 — LOCAL STORAGE                */
+      /* ========================================================= */
+
+      function savePersonal() {
+        let name = document.getElementById("p_name").value;
+        let age = document.getElementById("p_age").value;
+        let gender = document.getElementById("p_gender").value;
+        let desc = document.getElementById("p_desc").value;
+        let major = document.getElementById("p_major").value;
+
+        let langs = [];
+        document
+          .querySelectorAll("input[name='langs']:checked")
+          .forEach((ch) => {
+            langs.push(ch.value);
+          });
+
+        if (langs.length < 3) {
+          alert("Choose at least 3 programming languages!");
+          return;
+        }
+
+        let data = { name, age, gender, desc, major, langs };
+
+        localStorage.setItem("personalData", JSON.stringify(data));
+
+        renderPersonal();
+      }
+
+      function renderPersonal() {
+        let container = document.getElementById("personalCards");
+        container.innerHTML = "";
+
+        let data = JSON.parse(localStorage.getItem("personalData"));
+        if (!data) return;
+
+        container.innerHTML = `
+        <div class="card">
+            <strong>Name:</strong> ${data.name}<br>
+            <strong>Age:</strong> ${data.age}<br>
+            <strong>Gender:</strong> ${data.gender}<br>
+            <strong>Description:</strong> ${data.desc}<br>
+            <strong>Major:</strong> ${data.major}<br>
+            <strong>Languages:</strong> ${data.langs.join(", ")}
+        </div>
+    `;
+      }
+
+      renderPersonal();
+
+      /* ========================================================= */
+      /*                    TASK 2 — SESSION STORAGE               */
+      /* ========================================================= */
+
+      function saveProject() {
+        let subject = document.getElementById("pr_subject").value;
+        let desc = document.getElementById("pr_desc").value;
+        let users = document.getElementById("pr_users").value;
+        let tech = document.getElementById("pr_tech").value;
+
+        let project = { subject, desc, users, tech };
+
+        sessionStorage.setItem("projectData", JSON.stringify(project));
+
+        renderProject();
+      }
+
+      function renderProject() {
+        let container = document.getElementById("projectCards");
+        container.innerHTML = "";
+
+        let project = JSON.parse(sessionStorage.getItem("projectData"));
+        if (!project) return;
+
+        container.innerHTML = `
+        <div class="card">
+            <strong>Subject:</strong> ${project.subject}<br>
+            <strong>Description:</strong> ${project.desc}<br>
+            <strong>User Types:</strong> ${project.users}<br>
+            <strong>Technology Used:</strong> ${project.tech}
+        </div>
+    `;
+      }
+
+      renderProject();
+
+      /* ========================================================= */
+      /*                TASK 3 — REGISTER & LOGIN                  */
+      /* ========================================================= */
+
+      function registerUser() {
+        let first = document.getElementById("r_fname").value;
+        let last = document.getElementById("r_lname").value;
+        let email = document.getElementById("r_email").value;
+        let pass = document.getElementById("r_pass").value;
+
+        let user = { first, last, email, pass };
+
+        localStorage.setItem("userAccount", JSON.stringify(user));
+
+        alert("Registration Successful!");
+      }
+
+      function loginUser() {
+        let email = document.getElementById("l_email").value;
+        let pass = document.getElementById("l_pass").value;
+
+        let user = JSON.parse(localStorage.getItem("userAccount"));
+
+        let status = document.getElementById("loginStatus");
+
+        if (user && user.email === email && user.pass === pass) {
+          status.style.color = "green";
+          status.innerText = "Login Success!";
+        } else {
+          status.style.color = "red";
+          status.innerText = "Wrong email or password!";
+        }
+      }
+    </script>
+  </body>
+</html>

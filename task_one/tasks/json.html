@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Task 4</title>
+
+    <style>
+      input {
+        padding: 6px;
+        margin: 5px;
+        width: 200px;
+      }
+
+      .valid {
+        background-color: #b4f8c8;
+      }
+
+      .invalid {
+        background-color: #ffb3b3;
+      }
+      #titleBar {
+        background-color: navy;
+        color: white;
+        padding: 15px;
+        text-align: center;
+        cursor: pointer;
+        font-size: 18px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        display: none;
+      }
+
+      td,
+      th {
+        border: 1px solid black;
+        padding: 8px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h3>Sign In</h3>
+
+    Name:
+    <input type="text" id="name" oninput="validateName()" /><br />
+
+    Email:
+    <input type="text" id="email" oninput="validateEmail()" /><br />
+
+    Mobile:
+    <input type="text" id="mobile" oninput="validateMobile()" /><br />
+
+    <button onclick="alert('Clicked to Print!')">Click to Print</button>
+    <br />
+    <br />
+    <div id="titleBar">Click to show Table / Double Click to hide Table</div>
+
+    <table id="dataTable">
+      <tr>
+        <th>Full Name</th>
+        <th>Mobile</th>
+        <th>Email</th>
+      </tr>
+      <tr>
+        <td>Alex</td>
+        <td>767 219 911</td>
+        <td>alex@gmail.com</td>
+      </tr>
+      <tr>
+        <td>Sara</td>
+        <td>654 112 781</td>
+        <td>sara@yahoo.com</td>
+      </tr>
+      <tr>
+        <td>Monica</td>
+        <td>312 778 595</td>
+        <td>monica@outlook.com</td>
+      </tr>
+      <tr>
+        <td>Jennie</td>
+        <td>447 555 734</td>
+        <td>jennie@gmail.com</td>
+      </tr>
+      <tr>
+        <td>Mark</td>
+        <td>985 212 991</td>
+        <td>mark@yahoo.com</td>
+      </tr>
+    </table>
+    <script src="json.js"></script>
+  </body>
+</html>
