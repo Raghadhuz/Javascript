@@ -1,45 +1,82 @@
-function validateName() {
-  let name = document.getElementById("name");
-  let regex = /^[A-Za-z]+$/;
+// Global variable to store the data and table state
+let jsonData = [];
+let tableVisible = false; // to know if the table is currently shown
 
-  if (regex.test(name.value)) {
-    name.className = "valid";
-  } else {
-    name.className = "invalid";
+// 1) When the page loads, fetch the JSON file
+fetch("data.json")
+  .then((response) => response.json())
+  .then((data) => {
+    jsonData = data; // save the data in the variable
+  })
+  .catch((error) => {
+    console.error("Error loading JSON:", error);
+  });
+
+// 2) Get the elements from HTML
+const box = document.getElementById("box");
+const tableContainer = document.getElementById("table-container");
+
+// 3) Function to create the table from jsonData
+function createTableFromJson() {
+  // If no data, do nothing
+  if (!jsonData || jsonData.length === 0) {
+    tableContainer.innerHTML = "<p>No data available</p>";
+    return;
   }
+
+  // Clear old content
+  tableContainer.innerHTML = "";
+
+  // Create table element
+  const table = document.createElement("table");
+
+  // --------- Create table header (keys of the first object) ----------
+  const thead = document.createElement("thead");
+  const headerRow = document.createElement("tr");
+
+  const firstObject = jsonData[0];
+  const keys = Object.keys(firstObject); // ["firstName", "lastName", "age"]
+
+  keys.forEach((key) => {
+    const th = document.createElement("th");
+    th.textContent = key;
+    headerRow.appendChild(th);
+  });
+
+  thead.appendChild(headerRow);
+  table.appendChild(thead);
+
+  // --------- Create table body ----------
+  const tbody = document.createElement("tbody");
+
+  jsonData.forEach((obj) => {
+    const row = document.createElement("tr");
+
+    keys.forEach((key) => {
+      const td = document.createElement("td");
+      td.textContent = obj[key];
+      row.appendChild(td);
+    });
+
+    tbody.appendChild(row);
+  });
+
+  table.appendChild(tbody);
+
+  // Add table to container
+  tableContainer.appendChild(table);
 }
 
-function validateEmail() {
-  let email = document.getElementById("email");
-  let regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-  if (regex.test(email.value)) {
-    email.className = "valid";
-  } else {
-    email.className = "invalid";
+// 4) Click event: show table
+box.addEventListener("click", function () {
+  if (!tableVisible) {
+    createTableFromJson();
+    tableVisible = true;
   }
-}
+});
 
-function validateMobile() {
-  let mobile = document.getElementById("mobile");
-  let regex = /^\d{10}$/;
-
-  if (regex.test(mobile.value)) {
-    mobile.className = "valid";
-  } else {
-    mobile.className = "invalid";
-  }
-}
-
-let title = document.getElementById("titleBar");
-let table = document.getElementById("dataTable");
-
-// Single Click → Show Table
-title.onclick = function () {
-  table.style.display = "table";
-};
-
-// Double Click → Hide Table
-title.ondblclick = function () {
-  table.style.display = "none";
-};
+// 5) Double-click event: hide table
+box.addEventListener("dblclick", function () {
+  tableContainer.innerHTML = ""; // remove the table
+  tableVisible = false;
+});
